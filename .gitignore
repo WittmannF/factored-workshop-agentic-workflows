@@ -1,0 +1,10 @@
+.venv/
+.env
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
+node_modules/
+*.zip
+ocr_*.png
+artifacts/
+Total_Loss_Investigator.ipynb

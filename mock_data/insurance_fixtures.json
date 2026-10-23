@@ -1,0 +1,95 @@
+{
+  "AUTO-101": {
+    "claim_id": "AUTO-101",
+    "policy_id": "POL-101",
+    "incident_date": "2026-10-15",
+    "plate": "ABC1D23",
+    "vehicle": "Honda Civic 2020",
+    "incident_type": "Front collision",
+    "repair_estimate": "69000",
+    "description": "Front impact; possible hidden structural damage.",
+    "policy": {
+      "active": true,
+      "collision_covered": true,
+      "total_loss_threshold": 0.75,
+      "insured_value_brl": 100000
+    },
+    "damage": {
+      "initial_estimate_brl": 69000,
+      "supplemental_estimate_brl": 82000,
+      "requires_supplemental": true
+    },
+    "valuation": {
+      "reference_value_brl": 100000,
+      "basis": "Fictional policy agreed value"
+    },
+    "history": {
+      "prior_claims": [],
+      "notes": "No prior related claims"
+    }
+  },
+  "AUTO-202": {
+    "claim_id": "AUTO-202",
+    "policy_id": "POL-202",
+    "incident_date": "2026-10-10",
+    "plate": "DEF4G56",
+    "vehicle": "Toyota Corolla 2019",
+    "incident_type": "Minor side collision",
+    "repair_estimate": "18000",
+    "description": "Localized side door damage with complete inspection.",
+    "policy": {
+      "active": true,
+      "collision_covered": true,
+      "total_loss_threshold": 0.8,
+      "insured_value_brl": 80000
+    },
+    "damage": {
+      "initial_estimate_brl": 18000,
+      "supplemental_estimate_brl": null,
+      "requires_supplemental": false
+    },
+    "valuation": {
+      "reference_value_brl": 80000,
+      "basis": "Fictional policy agreed value"
+    },
+    "history": {
+      "prior_claims": [],
+      "notes": "No prior related claims"
+    }
+  },
+  "AUTO-303": {
+    "claim_id": "AUTO-303",
+    "policy_id": "POL-303",
+    "incident_date": "2026-10-19",
+    "plate": "GHI7J89",
+    "vehicle": "Hyundai HB20 2021",
+    "incident_type": "Rear collision",
+    "repair_estimate": "61000",
+    "description": "Rear impact; scanned estimate and plate are blurred.",
+    "policy": {
+      "active": true,
+      "collision_covered": true,
+      "total_loss_threshold": 0.75,
+      "insured_value_brl": 90000
+    },
+    "damage": {
+      "initial_estimate_brl": 61000,
+      "supplemental_estimate_brl": null,
+      "requires_supplemental": false
+    },
+    "valuation": {
+      "reference_value_brl": 90000,
+      "basis": "Fictional policy agreed value"
+    },
+    "history": {
+      "prior_claims": [
+        {
+          "id": "PRIOR-11",
+          "status": "closed",
+          "damage": "front bumper"
+        }
+      ],
+      "notes": "Unrelated prior claim"
+    }
+  }
+}
