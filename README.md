@@ -24,6 +24,12 @@ npm run dev
 
 Open `http://127.0.0.1:5174`. The desk requires `OPENROUTER_API_KEY`.
 
+## Railway
+
+The Dockerfile builds the page and the API into one service. Railway reads `railway.toml`, injects `PORT`, and must have `OPENROUTER_API_KEY` set on the service. Do not commit `.env`.
+
+The public domain is the desk. The same process serves the page and the `/api` routes. Runs stay in the process memory and disappear on redeploy. Opik stays on a local server and is skipped when that server is absent.
+
 With a local Opik server at `http://localhost:5173`, each run appears in the `total-loss-investigator` project.
 
 ## Flow

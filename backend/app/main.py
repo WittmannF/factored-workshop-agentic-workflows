@@ -4,11 +4,14 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from .cases import ARTIFACTS, CASES, create_claim_pdfs
-from .config import require_live_settings
+from .config import ROOT, require_live_settings
 from .runs import page_file, resume_run, snapshot, start_run, step_run
+
+DESK = ROOT / 'frontend' / 'dist'
 
 
 @asynccontextmanager
@@ -18,7 +21,22 @@ async def lifespan(_app: FastAPI):
     yield
 
 
+class StripApiPrefix:
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope['type'] == 'http':
+            path = scope.get('path') or ''
+            if path == '/api' or path.startswith('/api/'):
+                scope = dict(scope)
+                scope['path'] = path[4:] or '/'
+                scope['raw_path'] = scope['path'].encode('utf-8')
+        await self.app(scope, receive, send)
+
+
 app = FastAPI(title='Total Loss Investigator', lifespan=lifespan)
+app.add_middleware(StripApiPrefix)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=['http://127.0.0.1:5174', 'http://localhost:5174'],
@@ -119,3 +137,7 @@ def page(thread_id: str):
         _missing(thread_id)
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail='Annotated page is not ready') from None
+
+
+if DESK.is_dir():
+    app.mount('/', StaticFiles(directory=DESK, html=True), name='desk')
