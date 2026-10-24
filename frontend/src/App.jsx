@@ -125,6 +125,16 @@ function humanize(key) {
   return FIELD_LABELS[key] || key.replaceAll('_', ' ').replace(/\./g, ' / ')
 }
 
+function fieldMarks(snap) {
+  return (snap?.fields_to_review || []).flatMap((name) => {
+    const box = snap.fields?.[name]?.bbox
+    if (!Array.isArray(box) || box.length < 4) return []
+    const numbers = box.map(Number)
+    if (numbers.some((value) => !Number.isFinite(value))) return []
+    return [{ name, box: numbers }]
+  })
+}
+
 function formatValue(key, value) {
   if (MONEY_KEYS.includes(key)) return brl(value)
   if (typeof value === 'boolean') return value ? 'Yes' : 'No'
@@ -228,9 +238,41 @@ function recommendationLabel(value) {
   }[value] || 'Recommendation in review'
 }
 
-function DocumentPreview({ imageUrl, compact = false }) {
+function MarkedPage({ imageUrl, alt, marks, showMarks, onError, onClick }) {
+  const [size, setSize] = useState(null)
+  return (
+    <span className="marked-page" onClick={onClick}>
+      <img
+        src={imageUrl}
+        alt={alt}
+        onError={onError}
+        onLoad={(event) => setSize({ width: event.target.naturalWidth, height: event.target.naturalHeight })}
+      />
+      {showMarks && size && marks.map((mark) => {
+        const [x, y, width, height] = mark.box
+        return (
+          <span
+            className="field-mark"
+            key={mark.name}
+            style={{
+              left: `${(x / size.width) * 100}%`,
+              top: `${(y / size.height) * 100}%`,
+              width: `${(width / size.width) * 100}%`,
+              height: `${(height / size.height) * 100}%`,
+            }}
+          >
+            <span className="field-mark-label">{humanize(mark.name)}</span>
+          </span>
+        )
+      })}
+    </span>
+  )
+}
+
+function DocumentPreview({ imageUrl, marks = [], compact = false }) {
   const [failed, setFailed] = useState(false)
   const [open, setOpen] = useState(false)
+  const [showMarks, setShowMarks] = useState(true)
 
   useEffect(() => {
     if (!open) return undefined
@@ -252,20 +294,30 @@ function DocumentPreview({ imageUrl, compact = false }) {
             </div>
           ) : (
             <button type="button" className="document-open" onClick={() => setOpen(true)}>
-              <img src={imageUrl} alt="Claim form with OCR annotations" onError={() => setFailed(true)} />
+              <MarkedPage imageUrl={imageUrl} alt="Claim form" marks={marks} showMarks={showMarks} onError={() => setFailed(true)} />
               <span className="zoom-hint"><Expand size={14} /> Click to enlarge</span>
             </button>
           )}
         </div>
         <figcaption>
           <span><FileText size={11} /> CLAIM FORM · PAGE 01</span>
-          <span className="mono">ANNOTATED EVIDENCE</span>
+          {marks.length > 0 ? (
+            <button type="button" className="mark-toggle" onClick={() => setShowMarks((value) => !value)}>
+              {showMarks ? 'Hide marks' : 'Show marks'}
+            </button>
+          ) : <span className="mono">SOURCE EVIDENCE</span>}
         </figcaption>
       </figure>
       {open && (
-        <div className="lightbox" role="dialog" aria-modal="true" aria-label="Annotated claim form" onClick={() => setOpen(false)}>
+        <div className="lightbox" role="dialog" aria-modal="true" aria-label="Claim form" onClick={() => setOpen(false)}>
           <button type="button" className="lightbox-close" onClick={() => setOpen(false)}><X size={16} /> Close</button>
-          <img src={imageUrl} alt="Claim form with OCR annotations, enlarged" onClick={(event) => event.stopPropagation()} />
+          <MarkedPage
+            imageUrl={imageUrl}
+            alt="Claim form, enlarged"
+            marks={marks}
+            showMarks={showMarks}
+            onClick={(event) => event.stopPropagation()}
+          />
         </div>
       )}
     </>
@@ -435,7 +487,7 @@ function NodeInspector({ nodeId, snap, imageUrl, corrections, setCorrections, ch
       {visited && nodeId === 'ocr' && (
         <div className="node-copy">
           <p>The claim document was read. The annotated image is the source evidence for the extracted fields.</p>
-          {imageUrl && <DocumentPreview imageUrl={imageUrl} compact />}
+          {imageUrl && <DocumentPreview imageUrl={imageUrl} marks={fieldMarks(snap)} compact />}
           {snap.ocr_lines?.length > 0 && (
             <div className="ocr-lines">
               <span className="micro-label">OCR OUTPUT</span>
@@ -469,7 +521,7 @@ function NodeInspector({ nodeId, snap, imageUrl, corrections, setCorrections, ch
             <span className="review-mark"><AlertCircle size={15} /></span>
             <p>{snap.pending_review?.message}</p>
           </div>
-          {imageUrl && <DocumentPreview imageUrl={imageUrl} />}
+          {imageUrl && <DocumentPreview imageUrl={imageUrl} marks={fieldMarks(snap)} />}
           <div className="correction-header">
             <div>
               <span className="micro-label">UNCERTAIN FIELDS</span>

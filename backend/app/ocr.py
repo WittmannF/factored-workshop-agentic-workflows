@@ -5,10 +5,10 @@ from typing import Any
 
 import pymupdf
 import pytesseract
-from PIL import Image, ImageDraw
+from PIL import Image
 from pytesseract import Output
 
-from .cases import ARTIFACTS, CRITICAL_FIELDS, FIELD_NAMES, LABELS, font
+from .cases import ARTIFACTS, CRITICAL_FIELDS, FIELD_NAMES, LABELS
 from .llm import OCR_THRESHOLD, RawClaimFields, openrouter_structured
 
 
@@ -181,15 +181,7 @@ def route_gate(state):
 
 
 def annotated_page(state):
-    image = Image.open(state['ocr']['images'][0]['path']).convert('RGB')
-    draw = ImageDraw.Draw(image)
-    for name in state.get('fields_to_review', []):
-        box = state['fields'][name].get('bbox')
-        if box:
-            x, y, width, height = box
-            draw.rectangle((x - 8, y - 8, x + width + 8, y + height + 8), outline='#e03b35', width=7)
-            draw.text((x, max(0, y - 34)), name, fill='#cc2626', font=font(22, True))
-    return image
+    return Image.open(state['ocr']['images'][0]['path']).convert('RGB')
 
 
 def parse_brl(value: Any) -> float | None:
