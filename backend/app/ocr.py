@@ -10,7 +10,6 @@ from pytesseract import Output
 
 from .cases import ARTIFACTS, CRITICAL_FIELDS, FIELD_NAMES, LABELS, font
 from .llm import OCR_THRESHOLD, RawClaimFields, openrouter_structured
-from .config import get_settings
 
 
 def ocr_pdf(pdf_path):
@@ -130,28 +129,26 @@ EXTRACT_SYSTEM = (
 
 def extract_claim(state):
     fields = parse_label_lines(state['ocr'])
-    if get_settings().live:
-        lines = '\n'.join(line['text'] for line in state['ocr']['lines'])
-        response = openrouter_structured(
-            RawClaimFields,
-            EXTRACT_SYSTEM,
-            lines,
-        )
-        values = response.model_dump()
-        for name in FIELD_NAMES:
-            value = values[name]
-            observed = fields[name]['value']
-            if value is None:
-                continue
-            if observed is not None:
-                similarity = difflib.SequenceMatcher(None, str(value).casefold(), str(observed).casefold()).ratio()
-                if similarity < 0.70:
-                    fields[name]['confidence'] = 0.0
-            else:
+    lines = '\n'.join(line['text'] for line in state['ocr']['lines'])
+    response = openrouter_structured(
+        RawClaimFields,
+        EXTRACT_SYSTEM,
+        lines,
+    )
+    values = response.model_dump()
+    for name in FIELD_NAMES:
+        value = values[name]
+        observed = fields[name]['value']
+        if value is None:
+            continue
+        if observed is not None:
+            similarity = difflib.SequenceMatcher(None, str(value).casefold(), str(observed).casefold()).ratio()
+            if similarity < 0.70:
                 fields[name]['confidence'] = 0.0
-            fields[name]['value'] = value
-    mode = 'OpenRouter' if get_settings().live else 'OCR mock mapper'
-    return {'fields': fields, 'trace': [f'Structured extraction ({mode})']}
+        else:
+            fields[name]['confidence'] = 0.0
+        fields[name]['value'] = value
+    return {'fields': fields, 'trace': ['Structured extraction (OpenRouter)']}
 
 
 def ocr_node(state):

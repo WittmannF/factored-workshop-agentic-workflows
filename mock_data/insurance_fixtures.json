@@ -15,9 +15,10 @@
       "insured_value_brl": 100000
     },
     "damage": {
-      "initial_estimate_brl": 69000,
-      "supplemental_estimate_brl": 82000,
-      "requires_supplemental": true
+      "photo": "AUTO-101.jpg",
+      "damage_type": "front_structural",
+      "size": "extensive",
+      "repair_estimate_brl": 82000
     },
     "valuation": {
       "reference_value_brl": 100000,
@@ -44,9 +45,10 @@
       "insured_value_brl": 80000
     },
     "damage": {
-      "initial_estimate_brl": 18000,
-      "supplemental_estimate_brl": null,
-      "requires_supplemental": false
+      "photo": "AUTO-202.jpg",
+      "damage_type": "side_panel",
+      "size": "localized",
+      "repair_estimate_brl": 18000
     },
     "valuation": {
       "reference_value_brl": 80000,
@@ -73,9 +75,10 @@
       "insured_value_brl": 90000
     },
     "damage": {
-      "initial_estimate_brl": 61000,
-      "supplemental_estimate_brl": null,
-      "requires_supplemental": false
+      "photo": "AUTO-303.jpg",
+      "damage_type": "rear_panel",
+      "size": "moderate",
+      "repair_estimate_brl": 61000
     },
     "valuation": {
       "reference_value_brl": 90000,

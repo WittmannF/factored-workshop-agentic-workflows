@@ -187,6 +187,13 @@ button, input, select { font: inherit; }
 .ocr-lines { display: flex; flex-direction: column; gap: 4px; margin-top: 12px; }
 .ocr-line { display: flex; justify-content: space-between; gap: 12px; padding: 7px 8px; border-bottom: 1px solid #e6e1d6; color: #3c4942; font-size: 13px; }
 .ocr-line span:last-child { flex: 0 0 auto; color: #6d7b72; font-size: 12px; }
+.tool-trace { margin-top: 12px; }
+.tool-call { margin-top: 8px; padding-top: 8px; border-top: 1px solid #e0dbd0; }
+.tool-call > strong { display: block; color: #3c4942; font-size: 13px; }
+.tool-row { display: grid; grid-template-columns: minmax(105px, .8fr) minmax(0, 1.2fr); gap: 8px; margin-top: 4px; }
+.tool-row span { color: #85877c; font-size: 11px; line-height: 1.4; }
+.tool-row strong { color: #47554c; font-size: 12px; font-weight: 500; line-height: 1.4; overflow-wrap: anywhere; text-align: right; }
+.tool-row a { color: #3d554b; }
 .prompt-block { margin-top: 14px; }
 .prompt-block pre { margin: 6px 0 0; padding: 10px 12px; max-height: 220px; overflow: auto; white-space: pre-wrap; border: 1px solid #e0dbd0; border-radius: 6px; background: #f8f5ee; color: #4c5852; font: 12px/1.45 var(--app-font-mono); }
 .prompt-toggle { margin-top: 6px; padding: 0; border: 0; background: transparent; color: #3d554b; font-size: 12px; font-weight: 700; cursor: pointer; }

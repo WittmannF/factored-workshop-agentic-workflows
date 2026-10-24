@@ -38,7 +38,7 @@ const FALLBACK_CASES = [
   { id: 'AUTO-303', vehicle: 'Hyundai HB20 2021', incident_type: 'Rear collision' },
 ]
 
-const MONEY_KEYS = ['repair_estimate_brl', 'reference_value_brl', 'insured_value_brl', 'supplemental_estimate_brl']
+const MONEY_KEYS = ['repair_estimate_brl', 'reference_value_brl', 'insured_value_brl', 'supplemental_estimate_brl', 'estimated_price']
 
 const FIELD_LABELS = {
   claim_id: 'Claim',
@@ -59,11 +59,17 @@ const FIELD_LABELS = {
   requires_supplemental: 'Needs supplemental',
   inspection_complete: 'Inspection complete',
   evidence_id: 'Evidence',
+  damage_type: 'Damage type',
+  size: 'Size',
+  source: 'Source',
+  notes: 'Notes',
+  estimated_price: 'Estimated price',
+  image_urls: 'Image URL',
+  warning: 'Warning',
+  basis: 'Basis',
   coverage_status: 'Coverage',
   next_agent: 'Next agent',
   iteration: 'Iteration',
-  basis: 'Basis',
-  notes: 'Notes',
   prior_claims: 'Prior claims',
   question: 'Question',
   answer: 'Answer',
@@ -147,6 +153,47 @@ function flattenObject(value, prefix = '') {
 function percent(value) {
   const number = Number(value)
   return Number.isFinite(number) ? `${(number * 100).toLocaleString('en-US', { maximumFractionDigits: 2 })}%` : '—'
+}
+
+function withoutToolCalls(data) {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return data
+  const { tool_calls: _omitted, ...rest } = data
+  return rest
+}
+
+function ToolValue({ name, value }) {
+  const key = String(name).split('.').pop()
+  if (typeof value === 'string' && /^https?:\/\//.test(value)) {
+    return <a href={value} target="_blank" rel="noreferrer">{value}</a>
+  }
+  if (value && typeof value === 'object') return JSON.stringify(value)
+  return formatValue(key, value)
+}
+
+function ToolTrace({ calls }) {
+  if (!calls?.length) return null
+  return (
+    <div className="tool-trace">
+      <span className="micro-label">TOOLS</span>
+      {calls.map((call, index) => (
+        <div className="tool-call" key={`${call.name}-${index}`}>
+          <strong>{call.name}</strong>
+          {flattenObject(call.arguments).map(([key, value]) => (
+            <div className="tool-row" key={`arg-${key}`}>
+              <span>{humanize(key)}</span>
+              <strong><ToolValue name={key} value={value} /></strong>
+            </div>
+          ))}
+          {flattenObject(call.result).map(([key, value]) => (
+            <div className="tool-row" key={`result-${key}`}>
+              <span>{humanize(key)}</span>
+              <strong><ToolValue name={key} value={value} /></strong>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  )
 }
 
 function PromptBlock({ text }) {
@@ -553,7 +600,12 @@ function NodeInspector({ nodeId, snap, imageUrl, corrections, setCorrections, ch
           ) : <div className="honest-empty"><span>The supervisor has not chosen the next agent yet.</span></div>}
         </div>
       )}
-      {visited && nodeId !== 'adjuster' && snap.findings?.[nodeId] && <ObjectPanel title={`Findings · ${meta.title}`} data={snap.findings[nodeId]} />}
+      {visited && nodeId !== 'adjuster' && snap.findings?.[nodeId] && (
+        <>
+          <ToolTrace calls={snap.findings[nodeId].tool_calls} />
+          <ObjectPanel title={`Findings · ${meta.title}`} data={withoutToolCalls(snap.findings[nodeId])} />
+        </>
+      )}
       {visited && nodeId === 'finalizer' && <FinalReport report={snap.final_report} consult={snap.findings?.adjuster} />}
       <PromptBlock key={nodeId} text={snap.prompts?.[nodeId]} />
     </div>
@@ -720,7 +772,6 @@ function Studio() {
         <div className="status-line">
           <span className={`status-led ${busy ? 'led-busy' : isHuman ? 'led-review' : snap?.status === 'finished' ? 'led-done' : ''}`} />
           <span>{statusLine}</span>
-          {snap && <span className={`snapshot-mode ${snap.mode}`}>{snap.mode === 'mock' ? 'SNAPSHOT · DEMO' : 'DATA · LIVE'}</span>}
           {snap && <span className="thread-id mono">{snap.thread_id}</span>}
         </div>
         {error && (

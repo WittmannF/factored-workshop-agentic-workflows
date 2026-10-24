@@ -12,7 +12,6 @@ _SETTINGS: 'Settings | None' = None
 
 @dataclass(frozen=True)
 class Settings:
-    live: bool
     openrouter_api_key: str | None
     openrouter_model: str
     env_path: Path
@@ -41,12 +40,10 @@ def get_settings() -> Settings:
     os.environ.setdefault('OPIK_URL_OVERRIDE', 'http://localhost:5173/api')
     os.environ.setdefault('OPIK_WORKSPACE', 'default')
     os.environ['OPIK_PROJECT_NAME'] = OPIK_PROJECT
-    flag = os.environ.get('RUN_LIVE_LLM', 'true').strip().lower()
     key = os.environ.get('OPENROUTER_API_KEY')
     if key:
         key = key.strip().strip('"').strip("'") or None
     _SETTINGS = Settings(
-        live=flag in {'1', 'true', 'yes'},
         openrouter_api_key=key,
         openrouter_model=OPENROUTER_MODEL,
         env_path=ENV_PATH,
@@ -56,7 +53,7 @@ def get_settings() -> Settings:
 
 def require_live_settings() -> Settings:
     settings = get_settings()
-    if settings.live and not settings.openrouter_api_key:
+    if not settings.openrouter_api_key:
         raise RuntimeError(
             f'Set OPENROUTER_API_KEY in {settings.env_path} or in the environment.'
         )

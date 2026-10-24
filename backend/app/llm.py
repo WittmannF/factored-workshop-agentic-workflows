@@ -107,18 +107,31 @@ def openrouter_client():
     return client
 
 
-def openrouter_structured(schema: type[BaseModel], system: str, payload: str):
-    settings = get_settings()
-    if not settings.live:
-        raise RuntimeError('OpenRouter is disabled; deterministic mock mode is active.')
-    client = openrouter_client()
+def _record_usage(completion) -> None:
+    usage = completion.usage
+    if not usage:
+        return
+    in_tokens = usage.prompt_tokens or 0
+    out_tokens = usage.completion_tokens or 0
+    LLM_USAGE.append({
+        'model': get_settings().openrouter_model,
+        'input_tokens': in_tokens,
+        'output_tokens': out_tokens,
+        'estimated_usd': round(
+            in_tokens * OPENROUTER_PRICE_PER_M_INPUT / 1e6
+            + out_tokens * OPENROUTER_PRICE_PER_M_OUTPUT / 1e6, 6),
+    })
+
+
+def _prepared_system(schema: type[BaseModel], system: str) -> str:
     if 'json' not in system.lower():
         system = system.rstrip() + ' Return one JSON object and nothing else.'
-    system = system.rstrip() + ' Use exactly these JSON keys: ' + ', '.join(schema.model_fields) + '.'
-    messages = [
-        {'role': 'system', 'content': system},
-        {'role': 'user', 'content': payload},
-    ]
+    return system.rstrip() + ' Use exactly these JSON keys: ' + ', '.join(schema.model_fields) + '.'
+
+
+def _complete_structured(schema: type[BaseModel], messages: list[dict]):
+    settings = get_settings()
+    client = openrouter_client()
     last_error: Exception | None = None
     for _attempt in range(2):
         completion = client.chat.completions.create(
@@ -132,18 +145,7 @@ def openrouter_structured(schema: type[BaseModel], system: str, payload: str):
                 'reasoning': {'enabled': False},
             },
         )
-        usage = completion.usage
-        if usage:
-            in_tokens = usage.prompt_tokens or 0
-            out_tokens = usage.completion_tokens or 0
-            LLM_USAGE.append({
-                'model': settings.openrouter_model,
-                'input_tokens': in_tokens,
-                'output_tokens': out_tokens,
-                'estimated_usd': round(
-                    in_tokens * OPENROUTER_PRICE_PER_M_INPUT / 1e6
-                    + out_tokens * OPENROUTER_PRICE_PER_M_OUTPUT / 1e6, 6),
-            })
+        _record_usage(completion)
         content = completion.choices[0].message.content or ''
         try:
             data = _coerce_string_fields(schema, _json_object(content))
@@ -151,8 +153,7 @@ def openrouter_structured(schema: type[BaseModel], system: str, payload: str):
         except Exception as exc:
             last_error = exc
             messages = [
-                {'role': 'system', 'content': system},
-                {'role': 'user', 'content': payload},
+                *messages,
                 {'role': 'assistant', 'content': content},
                 {'role': 'user', 'content': (
                     'That response did not match the schema: ' + str(exc)[:1200]
@@ -160,3 +161,94 @@ def openrouter_structured(schema: type[BaseModel], system: str, payload: str):
                 )},
             ]
     raise RuntimeError(f'OpenRouter structured output failed after retry: {last_error}') from last_error
+
+
+def openrouter_structured(schema: type[BaseModel], system: str, payload: str):
+    messages = [
+        {'role': 'system', 'content': _prepared_system(schema, system)},
+        {'role': 'user', 'content': payload},
+    ]
+    return _complete_structured(schema, messages)
+
+
+def openrouter_vision_structured(schema: type[BaseModel], system: str, text: str, image_urls: list[str]):
+    content = [{'type': 'text', 'text': text}]
+    content.extend(
+        {'type': 'image_url', 'image_url': {'url': url}}
+        for url in image_urls
+    )
+    messages = [
+        {'role': 'system', 'content': _prepared_system(schema, system)},
+        {'role': 'user', 'content': content},
+    ]
+    return _complete_structured(schema, messages)
+
+
+def _tool_arguments(raw) -> dict:
+    if isinstance(raw, dict):
+        return raw
+    if not isinstance(raw, str) or not raw.strip():
+        return {}
+    try:
+        parsed = json.loads(raw)
+    except json.JSONDecodeError:
+        return {}
+    return parsed if isinstance(parsed, dict) else {}
+
+
+def run_tool_loop(system: str, user: str, schemas: list[dict], handlers: dict, max_rounds: int = 6) -> list[dict]:
+    settings = get_settings()
+    client = openrouter_client()
+    messages: list[dict] = [
+        {'role': 'system', 'content': system},
+        {'role': 'user', 'content': user},
+    ]
+    calls: list[dict] = []
+    for _round in range(max_rounds):
+        completion = client.chat.completions.create(
+            model=settings.openrouter_model,
+            messages=messages,
+            tools=schemas,
+            temperature=0,
+            extra_body={'reasoning': {'enabled': False}},
+        )
+        _record_usage(completion)
+        message = completion.choices[0].message
+        tool_calls = message.tool_calls or []
+        if not tool_calls:
+            break
+        messages.append({
+            'role': 'assistant',
+            'content': message.content or '',
+            'tool_calls': [
+                {
+                    'id': call.id,
+                    'type': 'function',
+                    'function': {
+                        'name': call.function.name,
+                        'arguments': call.function.arguments or '{}',
+                    },
+                }
+                for call in tool_calls
+            ],
+        })
+        for call in tool_calls:
+            name = call.function.name
+            arguments = _tool_arguments(call.function.arguments)
+            handler = handlers.get(name)
+            if handler is None:
+                result = {'error': f'Unknown tool: {name}'}
+            else:
+                try:
+                    result = handler(**arguments)
+                except TypeError:
+                    result = {'error': f'{name} received unexpected arguments.'}
+                except Exception as exc:
+                    result = {'error': str(exc)[:500]}
+            calls.append({'name': name, 'arguments': arguments, 'result': result})
+            messages.append({
+                'role': 'tool',
+                'tool_call_id': call.id,
+                'content': json.dumps(result, ensure_ascii=False, default=str),
+            })
+    return calls
