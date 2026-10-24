@@ -36,6 +36,17 @@ def image_url(case_id: str) -> str:
     return f'{RAW_BASE}/{photo}'
 
 
+def case_for_claim(claim_id: str) -> str | None:
+    return _case_for_claim(claim_id)
+
+
+def case_for_document(claim_id: str, policy_id: str) -> str | None:
+    found = _case_for_claim(str(claim_id or ''))
+    if found and CASES[found]['policy_id'] == policy_id:
+        return found
+    return None
+
+
 def _case_for_claim(claim_id: str) -> str | None:
     for case_id, case in CASES.items():
         if case_id == claim_id or case.get('claim_id') == claim_id:
@@ -139,7 +150,7 @@ def calculate_costs(damage_features: dict | str) -> dict:
     case_id = _case_for_claim(str(damage_features.get('claim_id') or ''))
     if case_id is None:
         return {'repair_estimate_brl': None, 'basis': 'Case price table', 'warning': 'Unknown claim.'}
-    return _priced(case_id)
+    return {**_priced(case_id), 'claim_id': case_id}
 
 
 def retrieve_insurance_coverage(policy_id: str) -> dict:

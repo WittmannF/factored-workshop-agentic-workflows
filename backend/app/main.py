@@ -1,11 +1,12 @@
+import uuid
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
-from .cases import CASES, create_claim_pdfs
+from .cases import ARTIFACTS, CASES, create_claim_pdfs
 from .config import require_live_settings
 from .runs import page_file, resume_run, snapshot, start_run, step_run
 
@@ -57,6 +58,23 @@ def create_run(body: StartBody):
         raise HTTPException(status_code=404, detail=f'Unknown case {body.case_id}')
     try:
         return start_run(body.case_id)
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@app.post('/runs/upload')
+async def upload_run(file: UploadFile = File(...)):
+    name = (file.filename or '').rsplit('/', 1)[-1].rsplit('\\', 1)[-1]
+    payload = await file.read()
+    if not name.lower().endswith('.pdf') or not payload.startswith(b'%PDF'):
+        raise HTTPException(status_code=400, detail='Upload a PDF claim form.')
+    uploads = ARTIFACTS / 'uploads'
+    uploads.mkdir(parents=True, exist_ok=True)
+    case_id = f'upload-{uuid.uuid4().hex[:8]}'
+    path = uploads / f'{case_id}.pdf'
+    path.write_bytes(payload)
+    try:
+        return start_run(case_id, str(path), name)
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 

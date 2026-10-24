@@ -18,6 +18,7 @@ from .tools import (
     DAMAGE_SCHEMAS,
     DAMAGE_TYPES,
     calculate_costs,
+    case_for_document,
     extract_damage_features,
     reference_value,
     retrieve_evidence,
@@ -249,8 +250,7 @@ def _append_call(calls: list[dict], name: str, arguments: dict, result: dict) ->
 
 def coverage_node(state):
     claim = state['claim']
-    case_id = state['case_id']
-    fixture = CASES[case_id]
+    resolved = case_for_document(claim.get('claim_id'), claim.get('policy_id'))
     user = json.dumps({
         'policy_id': claim['policy_id'],
         'vehicle': claim.get('vehicle'),
@@ -258,7 +258,7 @@ def coverage_node(state):
         'question': (state.get('routing') or {}).get('question') or '',
     }, ensure_ascii=False)
     calls = run_tool_loop(COVERAGE_SYSTEM, user, COVERAGE_SCHEMAS, COVERAGE_HANDLERS)
-    matched = claim['policy_id'] == fixture['policy_id']
+    matched = resolved is not None
     if matched and not any(_usable(call, 'active') and call['name'] == 'retrieve_insurance_coverage' and call['result'].get('active') for call in calls):
         arguments = {'policy_id': claim['policy_id']}
         _append_call(calls, 'retrieve_insurance_coverage', arguments, retrieve_insurance_coverage(**arguments))
@@ -296,7 +296,7 @@ def coverage_node(state):
             'basis': price.get('basis'),
             'prior_claims': coverage.get('prior_claims') or [],
             'history_notes': coverage.get('history_notes') or '',
-            'evidence_id': f'POLICY-{case_id}',
+            'evidence_id': f'POLICY-{resolved}',
             'tool_calls': calls,
         }
     return _update_finding(state, 'coverage', finding)
@@ -304,7 +304,7 @@ def coverage_node(state):
 
 def damage_node(state):
     claim = state['claim']
-    case_id = state['case_id']
+    resolved = case_for_document(claim.get('claim_id'), claim.get('policy_id'))
     user = json.dumps({
         'claim_id': claim['claim_id'],
         'question': (state.get('routing') or {}).get('question') or '',
@@ -316,7 +316,7 @@ def damage_node(state):
         arguments = {'claim_id': claim['claim_id']}
         _append_call(calls, 'retrieve_evidence', arguments, retrieve_evidence(**arguments))
     evidence = next(call['result'] for call in reversed(calls) if call['name'] == 'retrieve_evidence')
-    if not any(
+    if resolved and not any(
         call['name'] == 'extract_damage_features'
         and (call.get('result') or {}).get('damage_type') in DAMAGE_TYPES
         and (call.get('result') or {}).get('source')
@@ -327,22 +327,48 @@ def damage_node(state):
             calls,
             'extract_damage_features',
             arguments,
-            extract_damage_features(arguments['image_urls'], case_id=case_id),
+            extract_damage_features(arguments['image_urls'], case_id=resolved),
         )
-    observed = next(call['result'] for call in reversed(calls) if call['name'] == 'extract_damage_features')
-    if not any(_usable(call, 'repair_estimate_brl') and call['name'] == 'calculate_costs' for call in calls):
+    observed = next(
+        (call['result'] for call in reversed(calls) if call['name'] == 'extract_damage_features'),
+        {},
+    )
+    if resolved and not any(
+        call['name'] == 'calculate_costs'
+        and (call.get('result') or {}).get('claim_id') == resolved
+        and _usable(call, 'repair_estimate_brl')
+        for call in calls
+    ):
+        sample = CASES[resolved]['damage']
         arguments = {'damage_features': {
             'claim_id': claim['claim_id'],
-            'damage_type': observed.get('damage_type') or CASES[case_id]['damage']['damage_type'],
-            'size': observed.get('size') or CASES[case_id]['damage']['size'],
+            'damage_type': observed.get('damage_type') or sample['damage_type'],
+            'size': observed.get('size') or sample['size'],
         }}
         _append_call(calls, 'calculate_costs', arguments, calculate_costs(**arguments))
     priced = next(
-        call['result'] for call in reversed(calls)
-        if call['name'] == 'calculate_costs' and (call.get('result') or {}).get('repair_estimate_brl') is not None
+        (
+            call['result'] for call in reversed(calls)
+            if call['name'] == 'calculate_costs'
+            and (call.get('result') or {}).get('claim_id') == resolved
+            and (call.get('result') or {}).get('repair_estimate_brl') is not None
+        ),
+        None,
     )
+    question = (state.get('routing') or {}).get('question') or ''
+    if priced is None:
+        finding = {
+            'evidence_id': f'DAMAGE-{claim.get("claim_id") or state["case_id"]}',
+            'inspection_complete': False,
+            'repair_estimate_brl': None,
+            'image_urls': [],
+            'warning': 'No priced evidence for this claim.',
+            'tool_calls': calls,
+            'question': question,
+        }
+        return _update_finding(state, 'damage', finding)
     finding = {
-        'evidence_id': f'DAMAGE-{case_id}',
+        'evidence_id': f'DAMAGE-{resolved}',
         'inspection_complete': True,
         'repair_estimate_brl': priced['repair_estimate_brl'],
         'damage_type': priced['damage_type'],
@@ -356,7 +382,7 @@ def damage_node(state):
         },
         'priced': priced,
         'tool_calls': calls,
-        'question': (state.get('routing') or {}).get('question') or '',
+        'question': question,
     }
     return _update_finding(state, 'damage', finding)
 
@@ -500,12 +526,14 @@ def build_graph():
 graph = build_graph()
 
 
-def initial_state(case_id: str) -> dict:
-    if case_id not in CASES:
-        raise KeyError(case_id)
+def initial_state(case_id: str, pdf_path: str | None = None) -> dict:
+    if pdf_path is None:
+        if case_id not in CASES:
+            raise KeyError(case_id)
+        pdf_path = str(PDF_DIR / f'{case_id}.pdf')
     return {
         'case_id': case_id,
-        'pdf_path': str(PDF_DIR / f'{case_id}.pdf'),
+        'pdf_path': pdf_path,
         'trace': [],
         'human_edits': [],
     }

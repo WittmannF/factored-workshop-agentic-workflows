@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   Background,
   Controls,
@@ -19,6 +19,7 @@ import {
   CircleDot,
   Clock3,
   Expand,
+  FileUp,
   FileSearch,
   FileText,
   LockKeyhole,
@@ -92,24 +93,28 @@ const AGENT_LABELS = {
   finalizer: 'Investigation memo',
 }
 
-async function api(path, options) {
+async function api(path, options = {}) {
+  const { body, headers, ...rest } = options
+  const isForm = typeof FormData !== 'undefined' && body instanceof FormData
   const response = await fetch(`/api${path}`, {
-    headers: { 'Content-Type': 'application/json' },
-    ...options,
+    ...rest,
+    body,
+    headers: isForm ? headers : { 'Content-Type': 'application/json', ...headers },
   })
   const text = await response.text()
-  const body = text ? JSON.parse(text) : null
+  const payload = text ? JSON.parse(text) : null
   if (!response.ok) {
-    const detail = body?.detail
+    const detail = payload?.detail
     const message = typeof detail === 'string' ? detail : `Request failed (${response.status})`
     const error = new Error(message)
     error.status = response.status
     throw error
   }
-  return body
+  return payload
 }
 
 function brl(value) {
+  if (value === null || value === undefined || value === '') return '—'
   const number = Number(value)
   return Number.isFinite(number)
     ? number.toLocaleString('en-US', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 })
@@ -623,6 +628,8 @@ function Studio() {
   const [busy, setBusy] = useState(false)
   const [runningNode, setRunningNode] = useState(null)
   const [error, setError] = useState('')
+  const [uploadName, setUploadName] = useState('')
+  const fileRef = useRef(null)
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes())
   const [edges, , onEdgesChange] = useEdgesState(initialEdges())
   const { fitView } = useReactFlow()
@@ -687,6 +694,18 @@ function Studio() {
     }
   }
 
+  function onUpload(event) {
+    const file = event.target.files?.[0]
+    event.target.value = ''
+    if (!file) return
+    setUploadName(file.name)
+    setSnap(null)
+    setSelected(null)
+    const form = new FormData()
+    form.append('file', file)
+    run(() => api('/runs/upload', { method: 'POST', body: form }), 'ocr')
+  }
+
   const resume = () => {
     const kind = snap.pending_review?.kind
     const waiting = snap.next_nodes?.[0] || (kind === 'adjuster' ? 'adjuster' : 'human_review')
@@ -706,6 +725,10 @@ function Studio() {
       : Object.values(corrections).every((value) => String(value).trim())
   )
   const selectedCase = cases.find((item) => item.id === caseId) || FALLBACK_CASES[2]
+  const claim = snap?.claim
+  const showingUpload = Boolean(uploadName) && !claim?.vehicle
+  const summaryVehicle = claim?.vehicle || (showingUpload ? (snap?.source_name || uploadName) : selectedCase.vehicle)
+  const summaryDetail = claim?.incident_type || (showingUpload ? 'Uploaded PDF' : selectedCase.incident_type)
   const isHuman = snap?.status === 'awaiting_human'
   const waitingNode = isHuman ? (snap.next_nodes?.[0] || (reviewKind === 'adjuster' ? 'adjuster' : 'human_review')) : null
   const focused = selected || waitingNode || snap?.last_node || 'ocr'
@@ -748,19 +771,23 @@ function Studio() {
             <span className="micro-label">CASE UNDER REVIEW</span>
             <span className="select-field">
               <CarFront size={17} />
-              <select value={caseId} onChange={(event) => { setCaseId(event.target.value); setSnap(null); setSelected(null); setError('') }}>
+              <select value={caseId} onChange={(event) => { setCaseId(event.target.value); setUploadName(''); setSnap(null); setSelected(null); setError('') }}>
                 {cases.map((item) => <option key={item.id} value={item.id}>{item.id} — {item.vehicle}</option>)}
               </select>
               <ChevronDown size={14} />
             </span>
           </label>
+          <input ref={fileRef} className="upload-input" type="file" accept="application/pdf" onChange={onUpload} />
+          <button className="button button-step" type="button" disabled={busy} onClick={() => fileRef.current?.click()}>
+            <FileUp size={15} /> Upload PDF
+          </button>
           <div className="case-summary">
-            <span className="case-vehicle">{selectedCase.vehicle}</span>
+            <span className="case-vehicle">{summaryVehicle}</span>
             <span className="summary-divider" />
-            <span>{selectedCase.incident_type}</span>
+            <span>{summaryDetail}</span>
           </div>
           <div className="control-actions">
-            <button className="button button-start" type="button" disabled={busy} onClick={() => run(() => api('/runs', { method: 'POST', body: JSON.stringify({ case_id: caseId }) }), 'ocr')}>
+            <button className="button button-start" type="button" disabled={busy} onClick={() => { setUploadName(''); run(() => api('/runs', { method: 'POST', body: JSON.stringify({ case_id: caseId }) }), 'ocr') }}>
               <Play size={14} fill="currentColor" /> Start analysis
             </button>
             <button className="button button-step" type="button" disabled={busy || !snap || snap.status !== 'running'} onClick={() => run(() => api(`/runs/${snap.thread_id}/step`, { method: 'POST' }), snap.next_nodes?.[0])}>

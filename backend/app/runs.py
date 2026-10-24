@@ -179,6 +179,7 @@ def snapshot(thread_id: str) -> dict:
         'human_edits': list(values.get('human_edits') or []),
         'pending_review': review,
         'page_url': f'/runs/{thread_id}/page' if page else None,
+        'source_name': RUNS[thread_id].get('source_name'),
         'ocr_lines': _ocr_lines(values),
         'prompts': {
             'extract': EXTRACT_SYSTEM,
@@ -190,10 +191,10 @@ def snapshot(thread_id: str) -> dict:
     }
 
 
-def start_run(case_id: str) -> dict:
-    thread_id = f'{case_id}-{uuid.uuid4().hex[:8]}'
-    RUNS[thread_id] = {'case_id': case_id}
-    _invoke(thread_id, initial_state(case_id))
+def start_run(case_id: str, pdf_path: str | None = None, source_name: str | None = None) -> dict:
+    thread_id = case_id if pdf_path else f'{case_id}-{uuid.uuid4().hex[:8]}'
+    RUNS[thread_id] = {'case_id': case_id, 'source_name': source_name}
+    _invoke(thread_id, initial_state(case_id, pdf_path))
     return snapshot(thread_id)
 
 

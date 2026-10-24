@@ -36,6 +36,7 @@ button, input, select { font: inherit; }
 .page-heading h1 em { color: #a66f4e; font-style: italic; }
 .heading-sub { margin: 0; font-size: 13px; color: #727971; }
 .control-strip { min-height: 70px; display: flex; align-items: center; gap: 22px; padding: 10px 15px; border: 1px solid #d4cec1; border-radius: 10px; background: #f5f2e9; }
+.upload-input { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 .case-select-wrap { display: flex; flex-direction: column; gap: 5px; min-width: 240px; }
 .micro-label { font: 8px var(--app-font-mono); letter-spacing: .1em; color: #8a8b7f; }
 .select-field { display: flex; align-items: center; gap: 8px; color: #53655d; }
