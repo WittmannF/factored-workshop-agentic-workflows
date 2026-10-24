@@ -1,0 +1,14 @@
+[project]
+name = "claims-supervisor-kickstart"
+version = "0.1.0"
+description = "Workshop notebook for the claims supervisor"
+requires-python = ">=3.12"
+dependencies = [
+    "langgraph>=1.0,<2",
+    "openai>=2,<3",
+    "pydantic>=2,<3",
+    "ipykernel>=6",
+]
+
+[tool.uv]
+package = false
