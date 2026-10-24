@@ -1,6 +1,8 @@
-# Total Loss Investigator
+# Agentic workflows
 
-A local claims desk for a fictional insurer. The investigation advances one step at a time. The memo is a preliminary recommendation and does not authorize payment.
+Companion repo for the Factored technical workshop on agent-based workflows. The worked example is a fictional auto-claims desk: a LangGraph investigation you can advance one step at a time, with a React Flow view of the same graph.
+
+The desk reads a claim, routes work to specialist steps, and can pause for a person. The memo at the end is a preliminary recommendation. It does not authorize payment.
 
 ## Run
 
