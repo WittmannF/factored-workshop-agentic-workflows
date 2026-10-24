@@ -9,8 +9,9 @@ from langgraph.graph import END, START, StateGraph
 from langgraph.types import interrupt
 
 from .cases import CASES, FIELD_NAMES, PDF_DIR
-from .llm import MAX_DELEGATIONS, USE_LIVE_LLM, FinalReport, RoutingDecision, openrouter_structured
+from .llm import MAX_DELEGATIONS, FinalReport, RoutingDecision, openrouter_structured
 from .ocr import confidence_gate, extract_claim, ocr_node, parse_brl, route_gate
+from .config import get_settings
 
 STEP_NODES = [
     'ocr', 'extract', 'confidence_gate', 'human_review', 'validate_claim',
@@ -210,7 +211,7 @@ MEMO_SYSTEM = (
 def supervisor_node(state: ClaimState):
     if state.get('delegation_count', 0) >= MAX_DELEGATIONS:
         route = RoutingDecision(next_agent='FINISH', question='', reason_summary='Delegation cap reached.')
-    elif not USE_LIVE_LLM:
+    elif not get_settings().live:
         route = mock_supervisor_route(state)
     else:
         prompt = {
@@ -375,7 +376,7 @@ def finalizer_node(state):
     )
     if adjuster.get('answer'):
         base.justification = f'{base.justification} Adjuster consult: {adjuster["answer"]}'
-    if USE_LIVE_LLM:
+    if get_settings().live:
         polished = openrouter_structured(
             FinalReport,
             MEMO_SYSTEM,

@@ -1,70 +1,18 @@
 import json
-import os
 import re
-from pathlib import Path
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict
 
-from .cases import SANDBOX
+from .config import OPIK_PROJECT, get_settings
 
 OCR_THRESHOLD = 86.0
-OPENROUTER_MODEL = 'qwen/qwen3.5-flash-02-23'
 MAX_DELEGATIONS = 5
-OPIK_PROJECT = 'total-loss-investigator'
 OPENROUTER_PRICE_PER_M_INPUT = 0.065
 OPENROUTER_PRICE_PER_M_OUTPUT = 0.26
 
-os.environ.setdefault('OPIK_URL_OVERRIDE', 'http://localhost:5173/api')
-os.environ.setdefault('OPIK_WORKSPACE', 'default')
-os.environ['OPIK_PROJECT_NAME'] = OPIK_PROJECT
-
 LLM_USAGE: list[dict] = []
 _OPENROUTER_CLIENT = None
-
-
-def load_project_env() -> None:
-    roots = [Path.cwd().resolve(), SANDBOX.resolve()]
-    seen = set()
-    for root in roots:
-        for directory in [root, *root.parents]:
-            env_path = directory / '.env'
-            if env_path in seen or not env_path.is_file():
-                if directory == directory.parent:
-                    break
-                continue
-            seen.add(env_path)
-            try:
-                from dotenv import load_dotenv
-                load_dotenv(env_path, override=False)
-            except ImportError:
-                for raw in env_path.read_text(encoding='utf-8').splitlines():
-                    line = raw.strip()
-                    if not line or line.startswith('#') or '=' not in line:
-                        continue
-                    name, value = line.split('=', 1)
-                    os.environ.setdefault(name.strip(), value.strip().strip('"').strip("'"))
-            if directory == directory.parent:
-                break
-
-
-def get_openrouter_key() -> str | None:
-    load_project_env()
-    key = os.environ.get('OPENROUTER_API_KEY')
-    if key:
-        key = key.strip().strip('"').strip("'")
-    return key or None
-
-
-def live_mode() -> bool:
-    flag = os.environ.get('RUN_LIVE_LLM', 'true').strip().lower()
-    return flag in {'1', 'true', 'yes'}
-
-
-USE_LIVE_LLM = live_mode()
-OPENROUTER_KEY = get_openrouter_key() if USE_LIVE_LLM else None
-if USE_LIVE_LLM and not OPENROUTER_KEY:
-    raise ValueError('Defina OPENROUTER_API_KEY no .env da raiz do projeto ou no ambiente.')
 
 
 class RawClaimFields(BaseModel):
@@ -143,8 +91,13 @@ def openrouter_client():
     global _OPENROUTER_CLIENT
     if _OPENROUTER_CLIENT is not None:
         return _OPENROUTER_CLIENT
+    settings = get_settings()
+    if not settings.openrouter_api_key:
+        raise RuntimeError(
+            f'Set OPENROUTER_API_KEY in {settings.env_path} or in the environment.'
+        )
     from openai import OpenAI
-    client = OpenAI(base_url='https://openrouter.ai/api/v1', api_key=OPENROUTER_KEY, timeout=60.0)
+    client = OpenAI(base_url='https://openrouter.ai/api/v1', api_key=settings.openrouter_api_key, timeout=60.0)
     try:
         from opik.integrations.openai import track_openai
         client = track_openai(client, project_name=OPIK_PROJECT, provider='openrouter')
@@ -155,7 +108,8 @@ def openrouter_client():
 
 
 def openrouter_structured(schema: type[BaseModel], system: str, payload: str):
-    if not USE_LIVE_LLM:
+    settings = get_settings()
+    if not settings.live:
         raise RuntimeError('OpenRouter is disabled; deterministic mock mode is active.')
     client = openrouter_client()
     if 'json' not in system.lower():
@@ -168,7 +122,7 @@ def openrouter_structured(schema: type[BaseModel], system: str, payload: str):
     last_error: Exception | None = None
     for _attempt in range(2):
         completion = client.chat.completions.create(
-            model=OPENROUTER_MODEL,
+            model=settings.openrouter_model,
             messages=messages,
             temperature=0,
             response_format={'type': 'json_schema', 'json_schema': {
@@ -183,7 +137,7 @@ def openrouter_structured(schema: type[BaseModel], system: str, payload: str):
             in_tokens = usage.prompt_tokens or 0
             out_tokens = usage.completion_tokens or 0
             LLM_USAGE.append({
-                'model': OPENROUTER_MODEL,
+                'model': settings.openrouter_model,
                 'input_tokens': in_tokens,
                 'output_tokens': out_tokens,
                 'estimated_usd': round(

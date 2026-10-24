@@ -9,7 +9,8 @@ from PIL import Image, ImageDraw
 from pytesseract import Output
 
 from .cases import ARTIFACTS, CRITICAL_FIELDS, FIELD_NAMES, LABELS, font
-from .llm import OCR_THRESHOLD, USE_LIVE_LLM, RawClaimFields, openrouter_structured
+from .llm import OCR_THRESHOLD, RawClaimFields, openrouter_structured
+from .config import get_settings
 
 
 def ocr_pdf(pdf_path):
@@ -129,7 +130,7 @@ EXTRACT_SYSTEM = (
 
 def extract_claim(state):
     fields = parse_label_lines(state['ocr'])
-    if USE_LIVE_LLM:
+    if get_settings().live:
         lines = '\n'.join(line['text'] for line in state['ocr']['lines'])
         response = openrouter_structured(
             RawClaimFields,
@@ -149,7 +150,7 @@ def extract_claim(state):
             else:
                 fields[name]['confidence'] = 0.0
             fields[name]['value'] = value
-    mode = 'OpenRouter' if USE_LIVE_LLM else 'OCR mock mapper'
+    mode = 'OpenRouter' if get_settings().live else 'OCR mock mapper'
     return {'fields': fields, 'trace': [f'Structured extraction ({mode})']}
 
 

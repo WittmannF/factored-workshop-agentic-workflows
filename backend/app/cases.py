@@ -3,10 +3,11 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
-SANDBOX = Path(__file__).resolve().parents[2]
-PDF_DIR = SANDBOX / 'sample_claims'
-MOCK_DIR = SANDBOX / 'mock_data'
-ARTIFACTS = SANDBOX / 'artifacts'
+from .config import ROOT
+
+PDF_DIR = ROOT / 'sample_claims'
+MOCK_DIR = ROOT / 'mock_data'
+ARTIFACTS = ROOT / 'artifacts'
 
 CASES = {
     'AUTO-101': {

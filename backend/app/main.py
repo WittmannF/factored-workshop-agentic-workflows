@@ -5,12 +5,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
-from investigator.cases import CASES, create_claim_pdfs
-from investigator.runs import page_file, resume_run, snapshot, start_run, step_run
+from .cases import CASES, create_claim_pdfs
+from .config import require_live_settings
+from .runs import page_file, resume_run, snapshot, start_run, step_run
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
+    require_live_settings()
     create_claim_pdfs()
     yield
 

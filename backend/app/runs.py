@@ -5,7 +5,8 @@ from langgraph.types import Command
 
 from .cases import ARTIFACTS
 from .graph import ADJUSTER_CHOICES, MEMO_SYSTEM, SUPERVISOR_SYSTEM, graph, initial_state
-from .llm import OPIK_PROJECT, USE_LIVE_LLM
+from .llm import OPIK_PROJECT
+from .config import get_settings
 from .ocr import EXTRACT_SYSTEM, annotated_page
 
 TRACE_NODES = (
@@ -43,8 +44,8 @@ def _attach_opik(config: dict, case_id: str | None):
         from opik.integrations.langchain import OpikTracer
         tracer = OpikTracer(
             project_name=OPIK_PROJECT,
-            tags=[tag for tag in (case_id, 'live' if USE_LIVE_LLM else 'mock', 'stepper') if tag],
-            metadata={'case_id': case_id, 'mode': 'live' if USE_LIVE_LLM else 'mock'},
+            tags=[tag for tag in (case_id, 'live' if get_settings().live else 'mock', 'stepper') if tag],
+            metadata={'case_id': case_id, 'mode': 'live' if get_settings().live else 'mock'},
             thread_id=str(thread_id) if thread_id else None,
             graph=graph.get_graph(),
         )
@@ -171,7 +172,7 @@ def snapshot(thread_id: str) -> dict:
         'human_edits': list(values.get('human_edits') or []),
         'pending_review': review,
         'page_url': f'/runs/{thread_id}/page' if page else None,
-        'mode': 'live' if USE_LIVE_LLM else 'mock',
+        'mode': 'live' if get_settings().live else 'mock',
         'ocr_lines': _ocr_lines(values),
         'prompts': {
             'extract': EXTRACT_SYSTEM,
