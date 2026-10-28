@@ -104,8 +104,10 @@ def _public_field(field: dict | None) -> dict | None:
 def _page_path(thread_id: str, values: dict):
     if not values.get('ocr') or not values['ocr'].get('images'):
         return None
-    ARTIFACTS.mkdir(parents=True, exist_ok=True)
     path = ARTIFACTS / f'{thread_id}.png'
+    if path.is_file():
+        return path
+    ARTIFACTS.mkdir(parents=True, exist_ok=True)
     annotated_page(values).save(path)
     return path
 

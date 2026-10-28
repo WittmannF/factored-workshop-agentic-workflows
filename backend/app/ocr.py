@@ -1,5 +1,6 @@
 import difflib
 import re
+import threading
 from datetime import date
 from typing import Any
 
@@ -11,8 +12,15 @@ from pytesseract import Output
 from .cases import ARTIFACTS, CRITICAL_FIELDS, FIELD_NAMES, LABELS
 from .llm import OCR_THRESHOLD, RawClaimFields, openrouter_structured
 
+_OCR_LOCK = threading.Lock()
+
 
 def ocr_pdf(pdf_path):
+    with _OCR_LOCK:
+        return _recognize_pdf(pdf_path)
+
+
+def _recognize_pdf(pdf_path):
     images, words, lines = [], [], []
     ARTIFACTS.mkdir(parents=True, exist_ok=True)
     with pymupdf.open(str(pdf_path)) as doc:

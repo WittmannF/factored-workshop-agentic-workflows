@@ -20,5 +20,6 @@ COPY backend/ /app/backend/
 RUN uv sync --frozen --no-dev
 COPY --from=ui /src/frontend/dist /app/frontend/dist
 ENV PORT=8000
+ENV OMP_THREAD_LIMIT=1
 EXPOSE 8000
 CMD ["sh", "-c", "uv run uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

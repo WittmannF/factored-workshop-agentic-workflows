@@ -29,6 +29,7 @@ import {
   Users,
   X,
 } from 'lucide-react'
+import { readApiPayload } from './api.js'
 import { ClaimNode, NODE_META, STATUS_LABEL, initialEdges, initialNodes, nodeStatus } from './flow.jsx'
 
 const nodeTypes = { claim: ClaimNode }
@@ -102,7 +103,7 @@ async function api(path, options = {}) {
     headers: isForm ? headers : { 'Content-Type': 'application/json', ...headers },
   })
   const text = await response.text()
-  const payload = text ? JSON.parse(text) : null
+  const payload = readApiPayload(text, response.headers.get('content-type'))
   if (!response.ok) {
     const detail = payload?.detail
     const message = typeof detail === 'string' ? detail : `Request failed (${response.status})`
