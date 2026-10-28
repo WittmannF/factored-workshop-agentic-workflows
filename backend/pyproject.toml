@@ -17,6 +17,9 @@ dependencies = [
     "uvicorn>=0.32",
 ]
 
+[dependency-groups]
+dev = ["pytest>=8"]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
