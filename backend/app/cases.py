@@ -5,8 +5,11 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 from .config import ROOT
 
-PDF_DIR = ROOT / 'sample_claims'
-MOCK_DIR = ROOT / 'mock_data'
+SAMPLES = ROOT / 'samples'
+PDF_DIR = SAMPLES / 'claims'
+DAMAGE_DIR = SAMPLES / 'damage'
+OCR_DIR = SAMPLES / 'ocr'
+FIXTURES = SAMPLES / 'insurance_fixtures.json'
 ARTIFACTS = ROOT / 'artifacts'
 
 CASES = {
@@ -89,7 +92,7 @@ def font(size, bold=False):
 
 
 def create_claim_pdfs():
-    for directory in (PDF_DIR, MOCK_DIR, ARTIFACTS):
+    for directory in (PDF_DIR, DAMAGE_DIR, OCR_DIR, ARTIFACTS):
         directory.mkdir(parents=True, exist_ok=True)
     for case_id, case in CASES.items():
         image = Image.new('RGB', (1654, 2339), '#ffffff')
@@ -125,5 +128,11 @@ def create_claim_pdfs():
     draw.text((145, 600), 'SIGNED REPAIR ESTIMATE BRL: 61000', font=font(34), fill='#172638')
     draw.text((145, 795), 'Educational mock document; no real customer data.', font=font(26), fill='#4b5d70')
     support.save(str(PDF_DIR / 'AUTO-303_supporting_docs.pdf'), 'PDF', resolution=160.0)
-    (MOCK_DIR / 'insurance_fixtures.json').write_text(json.dumps(CASES, ensure_ascii=False, indent=2), encoding='utf-8')
+    FIXTURES.write_text(json.dumps(CASES, ensure_ascii=False, indent=2), encoding='utf-8')
+    from .ocr import write_sample_ocr
+    write_sample_ocr()
     return sorted(PDF_DIR.glob('*.pdf'))
+
+
+if __name__ == '__main__':
+    create_claim_pdfs()

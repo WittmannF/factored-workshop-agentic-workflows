@@ -1,0 +1,1634 @@
+{
+    "images": [
+        {
+            "page": 1,
+            "path": "AUTO-101.png",
+            "width": 2233,
+            "height": 3158
+        }
+    ],
+    "words": [
+        {
+            "id": "p1-w4",
+            "text": "FICTIONAL",
+            "confidence": 95.0,
+            "bbox": [
+                169,
+                167,
+                320,
+                44
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w5",
+            "text": "INSURANCE",
+            "confidence": 96.0,
+            "bbox": [
+                512,
+                167,
+                359,
+                44
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w6",
+            "text": "COMPANY",
+            "confidence": 96.0,
+            "bbox": [
+                894,
+                167,
+                308,
+                44
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w8",
+            "text": "AUTO",
+            "confidence": 96.0,
+            "bbox": [
+                165,
+                258,
+                101,
+                27
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w9",
+            "text": "CLAIM",
+            "confidence": 95.0,
+            "bbox": [
+                280,
+                258,
+                108,
+                27
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w10",
+            "text": "INTAKE",
+            "confidence": 95.0,
+            "bbox": [
+                405,
+                258,
+                127,
+                27
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w11",
+            "text": "FORM",
+            "confidence": 95.0,
+            "bbox": [
+                549,
+                258,
+                102,
+                27
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w12",
+            "text": "|",
+            "confidence": 95.0,
+            "bbox": [
+                679,
+                258,
+                2,
+                33
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w13",
+            "text": "EDUCATIONAL",
+            "confidence": 96.0,
+            "bbox": [
+                709,
+                258,
+                259,
+                27
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w14",
+            "text": "SAMPLE",
+            "confidence": 96.0,
+            "bbox": [
+                982,
+                258,
+                143,
+                27
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w16",
+            "text": "Claim",
+            "confidence": 96.0,
+            "bbox": [
+                178,
+                443,
+                115,
+                32
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w17",
+            "text": "Notice",
+            "confidence": 96.0,
+            "bbox": [
+                311,
+                443,
+                131,
+                32
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w18",
+            "text": "and",
+            "confidence": 96.0,
+            "bbox": [
+                456,
+                443,
+                75,
+                32
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w19",
+            "text": "Preliminary",
+            "confidence": 95.0,
+            "bbox": [
+                549,
+                443,
+                236,
+                42
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w20",
+            "text": "Damage",
+            "confidence": 96.0,
+            "bbox": [
+                801,
+                443,
+                167,
+                42
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w21",
+            "text": "Estimate",
+            "confidence": 96.0,
+            "bbox": [
+                985,
+                443,
+                179,
+                32
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w23",
+            "text": "CLAIM",
+            "confidence": 95.0,
+            "bbox": [
+                191,
+                629,
+                115,
+                27
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w24",
+            "text": "ID:",
+            "confidence": 95.0,
+            "bbox": [
+                321,
+                629,
+                45,
+                27
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w25",
+            "text": "AUTO-101",
+            "confidence": 91.0,
+            "bbox": [
+                763,
+                624,
+                204,
+                32
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w27",
+            "text": "POLICY",
+            "confidence": 96.0,
+            "bbox": [
+                192,
+                859,
+                138,
+                27
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w28",
+            "text": "ID:",
+            "confidence": 95.0,
+            "bbox": [
+                344,
+                859,
+                44,
+                27
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w29",
+            "text": "POL-101",
+            "confidence": 92.0,
+            "bbox": [
+                766,
+                853,
+                166,
+                33
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w31",
+            "text": "INCIDENT",
+            "confidence": 96.0,
+            "bbox": [
+                192,
+                1088,
+                175,
+                27
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w32",
+            "text": "DATE:",
+            "confidence": 96.0,
+            "bbox": [
+                381,
+                1088,
+                109,
+                27
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w33",
+            "text": "2026-10-15",
+            "confidence": 96.0,
+            "bbox": [
+                764,
+                1083,
+                222,
+                32
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w35",
+            "text": "PLATE:",
+            "confidence": 96.0,
+            "bbox": [
+                192,
+                1309,
+                130,
+                48
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w36",
+            "text": "ABC1D23",
+            "confidence": 92.0,
+            "bbox": [
+                763,
+                1312,
+                196,
+                33
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w38",
+            "text": "VEHICLE:",
+            "confidence": 96.0,
+            "bbox": [
+                189,
+                1538,
+                174,
+                49
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w39",
+            "text": "Honda",
+            "confidence": 95.0,
+            "bbox": [
+                766,
+                1542,
+                125,
+                33
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w40",
+            "text": "Civic",
+            "confidence": 96.0,
+            "bbox": [
+                907,
+                1542,
+                94,
+                33
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w41",
+            "text": "2020",
+            "confidence": 96.0,
+            "bbox": [
+                1015,
+                1542,
+                95,
+                33
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w43",
+            "text": "INCIDENT",
+            "confidence": 96.0,
+            "bbox": [
+                192,
+                1777,
+                175,
+                27
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w44",
+            "text": "TYPE:",
+            "confidence": 96.0,
+            "bbox": [
+                379,
+                1777,
+                108,
+                27
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w45",
+            "text": "Front",
+            "confidence": 96.0,
+            "bbox": [
+                766,
+                1771,
+                99,
+                33
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w46",
+            "text": "collision",
+            "confidence": 96.0,
+            "bbox": [
+                879,
+                1771,
+                153,
+                33
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w48",
+            "text": "REPAIR",
+            "confidence": 96.0,
+            "bbox": [
+                192,
+                2006,
+                140,
+                28
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w49",
+            "text": "ESTIMATE",
+            "confidence": 95.0,
+            "bbox": [
+                346,
+                2006,
+                186,
+                28
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w50",
+            "text": "BRL:",
+            "confidence": 95.0,
+            "bbox": [
+                548,
+                2006,
+                84,
+                28
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w51",
+            "text": "69000",
+            "confidence": 96.0,
+            "bbox": [
+                764,
+                2001,
+                119,
+                33
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w53",
+            "text": "DESCRIPTION:",
+            "confidence": 96.0,
+            "bbox": [
+                192,
+                2226,
+                265,
+                51
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w54",
+            "text": "Front",
+            "confidence": 96.0,
+            "bbox": [
+                766,
+                2230,
+                99,
+                33
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w55",
+            "text": "impact;",
+            "confidence": 96.0,
+            "bbox": [
+                880,
+                2230,
+                136,
+                43
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w56",
+            "text": "possible",
+            "confidence": 96.0,
+            "bbox": [
+                1034,
+                2230,
+                158,
+                43
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w57",
+            "text": "hidden",
+            "confidence": 96.0,
+            "bbox": [
+                1208,
+                2230,
+                126,
+                33
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w58",
+            "text": "structural",
+            "confidence": 96.0,
+            "bbox": [
+                1350,
+                2230,
+                179,
+                33
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w59",
+            "text": "damage.",
+            "confidence": 96.0,
+            "bbox": [
+                1545,
+                2230,
+                165,
+                43
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w61",
+            "text": "IMPORTANT",
+            "confidence": 96.0,
+            "bbox": [
+                171,
+                2654,
+                222,
+                28
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w63",
+            "text": "Synthetic",
+            "confidence": 96.0,
+            "bbox": [
+                170,
+                2728,
+                140,
+                32
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w64",
+            "text": "values.",
+            "confidence": 96.0,
+            "bbox": [
+                321,
+                2728,
+                106,
+                25
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w65",
+            "text": "Not",
+            "confidence": 95.0,
+            "bbox": [
+                442,
+                2728,
+                51,
+                25
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w66",
+            "text": "a",
+            "confidence": 95.0,
+            "bbox": [
+                504,
+                2734,
+                16,
+                19
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w67",
+            "text": "real",
+            "confidence": 96.0,
+            "bbox": [
+                533,
+                2728,
+                53,
+                25
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w68",
+            "text": "insurance",
+            "confidence": 96.0,
+            "bbox": [
+                601,
+                2728,
+                146,
+                25
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w69",
+            "text": "policy",
+            "confidence": 95.0,
+            "bbox": [
+                760,
+                2728,
+                86,
+                32
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w70",
+            "text": "or",
+            "confidence": 96.0,
+            "bbox": [
+                857,
+                2734,
+                30,
+                19
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w71",
+            "text": "claim.",
+            "confidence": 96.0,
+            "bbox": [
+                898,
+                2728,
+                88,
+                25
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w73",
+            "text": "No",
+            "confidence": 96.0,
+            "bbox": [
+                171,
+                2788,
+                42,
+                26
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w74",
+            "text": "automatic",
+            "confidence": 96.0,
+            "bbox": [
+                224,
+                2788,
+                148,
+                26
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w75",
+            "text": "claim",
+            "confidence": 96.0,
+            "bbox": [
+                384,
+                2788,
+                78,
+                26
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w76",
+            "text": "approval",
+            "confidence": 96.0,
+            "bbox": [
+                475,
+                2788,
+                128,
+                33
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w77",
+            "text": "or",
+            "confidence": 96.0,
+            "bbox": [
+                617,
+                2795,
+                29,
+                19
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w78",
+            "text": "denial",
+            "confidence": 96.0,
+            "bbox": [
+                658,
+                2788,
+                87,
+                26
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w79",
+            "text": "is",
+            "confidence": 96.0,
+            "bbox": [
+                760,
+                2788,
+                22,
+                26
+            ],
+            "page": 1
+        },
+        {
+            "id": "p1-w80",
+            "text": "permitted.",
+            "confidence": 96.0,
+            "bbox": [
+                795,
+                2788,
+                149,
+                33
+            ],
+            "page": 1
+        }
+    ],
+    "lines": [
+        {
+            "page": 1,
+            "text": "FICTIONAL INSURANCE COMPANY",
+            "words": [
+                {
+                    "id": "p1-w4",
+                    "text": "FICTIONAL",
+                    "confidence": 95.0,
+                    "bbox": [
+                        169,
+                        167,
+                        320,
+                        44
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w5",
+                    "text": "INSURANCE",
+                    "confidence": 96.0,
+                    "bbox": [
+                        512,
+                        167,
+                        359,
+                        44
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w6",
+                    "text": "COMPANY",
+                    "confidence": 96.0,
+                    "bbox": [
+                        894,
+                        167,
+                        308,
+                        44
+                    ],
+                    "page": 1
+                }
+            ]
+        },
+        {
+            "page": 1,
+            "text": "AUTO CLAIM INTAKE FORM | EDUCATIONAL SAMPLE",
+            "words": [
+                {
+                    "id": "p1-w8",
+                    "text": "AUTO",
+                    "confidence": 96.0,
+                    "bbox": [
+                        165,
+                        258,
+                        101,
+                        27
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w9",
+                    "text": "CLAIM",
+                    "confidence": 95.0,
+                    "bbox": [
+                        280,
+                        258,
+                        108,
+                        27
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w10",
+                    "text": "INTAKE",
+                    "confidence": 95.0,
+                    "bbox": [
+                        405,
+                        258,
+                        127,
+                        27
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w11",
+                    "text": "FORM",
+                    "confidence": 95.0,
+                    "bbox": [
+                        549,
+                        258,
+                        102,
+                        27
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w12",
+                    "text": "|",
+                    "confidence": 95.0,
+                    "bbox": [
+                        679,
+                        258,
+                        2,
+                        33
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w13",
+                    "text": "EDUCATIONAL",
+                    "confidence": 96.0,
+                    "bbox": [
+                        709,
+                        258,
+                        259,
+                        27
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w14",
+                    "text": "SAMPLE",
+                    "confidence": 96.0,
+                    "bbox": [
+                        982,
+                        258,
+                        143,
+                        27
+                    ],
+                    "page": 1
+                }
+            ]
+        },
+        {
+            "page": 1,
+            "text": "Claim Notice and Preliminary Damage Estimate",
+            "words": [
+                {
+                    "id": "p1-w16",
+                    "text": "Claim",
+                    "confidence": 96.0,
+                    "bbox": [
+                        178,
+                        443,
+                        115,
+                        32
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w17",
+                    "text": "Notice",
+                    "confidence": 96.0,
+                    "bbox": [
+                        311,
+                        443,
+                        131,
+                        32
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w18",
+                    "text": "and",
+                    "confidence": 96.0,
+                    "bbox": [
+                        456,
+                        443,
+                        75,
+                        32
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w19",
+                    "text": "Preliminary",
+                    "confidence": 95.0,
+                    "bbox": [
+                        549,
+                        443,
+                        236,
+                        42
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w20",
+                    "text": "Damage",
+                    "confidence": 96.0,
+                    "bbox": [
+                        801,
+                        443,
+                        167,
+                        42
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w21",
+                    "text": "Estimate",
+                    "confidence": 96.0,
+                    "bbox": [
+                        985,
+                        443,
+                        179,
+                        32
+                    ],
+                    "page": 1
+                }
+            ]
+        },
+        {
+            "page": 1,
+            "text": "CLAIM ID: AUTO-101",
+            "words": [
+                {
+                    "id": "p1-w23",
+                    "text": "CLAIM",
+                    "confidence": 95.0,
+                    "bbox": [
+                        191,
+                        629,
+                        115,
+                        27
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w24",
+                    "text": "ID:",
+                    "confidence": 95.0,
+                    "bbox": [
+                        321,
+                        629,
+                        45,
+                        27
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w25",
+                    "text": "AUTO-101",
+                    "confidence": 91.0,
+                    "bbox": [
+                        763,
+                        624,
+                        204,
+                        32
+                    ],
+                    "page": 1
+                }
+            ]
+        },
+        {
+            "page": 1,
+            "text": "POLICY ID: POL-101",
+            "words": [
+                {
+                    "id": "p1-w27",
+                    "text": "POLICY",
+                    "confidence": 96.0,
+                    "bbox": [
+                        192,
+                        859,
+                        138,
+                        27
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w28",
+                    "text": "ID:",
+                    "confidence": 95.0,
+                    "bbox": [
+                        344,
+                        859,
+                        44,
+                        27
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w29",
+                    "text": "POL-101",
+                    "confidence": 92.0,
+                    "bbox": [
+                        766,
+                        853,
+                        166,
+                        33
+                    ],
+                    "page": 1
+                }
+            ]
+        },
+        {
+            "page": 1,
+            "text": "INCIDENT DATE: 2026-10-15",
+            "words": [
+                {
+                    "id": "p1-w31",
+                    "text": "INCIDENT",
+                    "confidence": 96.0,
+                    "bbox": [
+                        192,
+                        1088,
+                        175,
+                        27
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w32",
+                    "text": "DATE:",
+                    "confidence": 96.0,
+                    "bbox": [
+                        381,
+                        1088,
+                        109,
+                        27
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w33",
+                    "text": "2026-10-15",
+                    "confidence": 96.0,
+                    "bbox": [
+                        764,
+                        1083,
+                        222,
+                        32
+                    ],
+                    "page": 1
+                }
+            ]
+        },
+        {
+            "page": 1,
+            "text": "PLATE: ABC1D23",
+            "words": [
+                {
+                    "id": "p1-w35",
+                    "text": "PLATE:",
+                    "confidence": 96.0,
+                    "bbox": [
+                        192,
+                        1309,
+                        130,
+                        48
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w36",
+                    "text": "ABC1D23",
+                    "confidence": 92.0,
+                    "bbox": [
+                        763,
+                        1312,
+                        196,
+                        33
+                    ],
+                    "page": 1
+                }
+            ]
+        },
+        {
+            "page": 1,
+            "text": "VEHICLE: Honda Civic 2020",
+            "words": [
+                {
+                    "id": "p1-w38",
+                    "text": "VEHICLE:",
+                    "confidence": 96.0,
+                    "bbox": [
+                        189,
+                        1538,
+                        174,
+                        49
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w39",
+                    "text": "Honda",
+                    "confidence": 95.0,
+                    "bbox": [
+                        766,
+                        1542,
+                        125,
+                        33
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w40",
+                    "text": "Civic",
+                    "confidence": 96.0,
+                    "bbox": [
+                        907,
+                        1542,
+                        94,
+                        33
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w41",
+                    "text": "2020",
+                    "confidence": 96.0,
+                    "bbox": [
+                        1015,
+                        1542,
+                        95,
+                        33
+                    ],
+                    "page": 1
+                }
+            ]
+        },
+        {
+            "page": 1,
+            "text": "INCIDENT TYPE: Front collision",
+            "words": [
+                {
+                    "id": "p1-w43",
+                    "text": "INCIDENT",
+                    "confidence": 96.0,
+                    "bbox": [
+                        192,
+                        1777,
+                        175,
+                        27
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w44",
+                    "text": "TYPE:",
+                    "confidence": 96.0,
+                    "bbox": [
+                        379,
+                        1777,
+                        108,
+                        27
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w45",
+                    "text": "Front",
+                    "confidence": 96.0,
+                    "bbox": [
+                        766,
+                        1771,
+                        99,
+                        33
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w46",
+                    "text": "collision",
+                    "confidence": 96.0,
+                    "bbox": [
+                        879,
+                        1771,
+                        153,
+                        33
+                    ],
+                    "page": 1
+                }
+            ]
+        },
+        {
+            "page": 1,
+            "text": "REPAIR ESTIMATE BRL: 69000",
+            "words": [
+                {
+                    "id": "p1-w48",
+                    "text": "REPAIR",
+                    "confidence": 96.0,
+                    "bbox": [
+                        192,
+                        2006,
+                        140,
+                        28
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w49",
+                    "text": "ESTIMATE",
+                    "confidence": 95.0,
+                    "bbox": [
+                        346,
+                        2006,
+                        186,
+                        28
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w50",
+                    "text": "BRL:",
+                    "confidence": 95.0,
+                    "bbox": [
+                        548,
+                        2006,
+                        84,
+                        28
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w51",
+                    "text": "69000",
+                    "confidence": 96.0,
+                    "bbox": [
+                        764,
+                        2001,
+                        119,
+                        33
+                    ],
+                    "page": 1
+                }
+            ]
+        },
+        {
+            "page": 1,
+            "text": "DESCRIPTION: Front impact; possible hidden structural damage.",
+            "words": [
+                {
+                    "id": "p1-w53",
+                    "text": "DESCRIPTION:",
+                    "confidence": 96.0,
+                    "bbox": [
+                        192,
+                        2226,
+                        265,
+                        51
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w54",
+                    "text": "Front",
+                    "confidence": 96.0,
+                    "bbox": [
+                        766,
+                        2230,
+                        99,
+                        33
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w55",
+                    "text": "impact;",
+                    "confidence": 96.0,
+                    "bbox": [
+                        880,
+                        2230,
+                        136,
+                        43
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w56",
+                    "text": "possible",
+                    "confidence": 96.0,
+                    "bbox": [
+                        1034,
+                        2230,
+                        158,
+                        43
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w57",
+                    "text": "hidden",
+                    "confidence": 96.0,
+                    "bbox": [
+                        1208,
+                        2230,
+                        126,
+                        33
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w58",
+                    "text": "structural",
+                    "confidence": 96.0,
+                    "bbox": [
+                        1350,
+                        2230,
+                        179,
+                        33
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w59",
+                    "text": "damage.",
+                    "confidence": 96.0,
+                    "bbox": [
+                        1545,
+                        2230,
+                        165,
+                        43
+                    ],
+                    "page": 1
+                }
+            ]
+        },
+        {
+            "page": 1,
+            "text": "IMPORTANT",
+            "words": [
+                {
+                    "id": "p1-w61",
+                    "text": "IMPORTANT",
+                    "confidence": 96.0,
+                    "bbox": [
+                        171,
+                        2654,
+                        222,
+                        28
+                    ],
+                    "page": 1
+                }
+            ]
+        },
+        {
+            "page": 1,
+            "text": "Synthetic values. Not a real insurance policy or claim.",
+            "words": [
+                {
+                    "id": "p1-w63",
+                    "text": "Synthetic",
+                    "confidence": 96.0,
+                    "bbox": [
+                        170,
+                        2728,
+                        140,
+                        32
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w64",
+                    "text": "values.",
+                    "confidence": 96.0,
+                    "bbox": [
+                        321,
+                        2728,
+                        106,
+                        25
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w65",
+                    "text": "Not",
+                    "confidence": 95.0,
+                    "bbox": [
+                        442,
+                        2728,
+                        51,
+                        25
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w66",
+                    "text": "a",
+                    "confidence": 95.0,
+                    "bbox": [
+                        504,
+                        2734,
+                        16,
+                        19
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w67",
+                    "text": "real",
+                    "confidence": 96.0,
+                    "bbox": [
+                        533,
+                        2728,
+                        53,
+                        25
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w68",
+                    "text": "insurance",
+                    "confidence": 96.0,
+                    "bbox": [
+                        601,
+                        2728,
+                        146,
+                        25
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w69",
+                    "text": "policy",
+                    "confidence": 95.0,
+                    "bbox": [
+                        760,
+                        2728,
+                        86,
+                        32
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w70",
+                    "text": "or",
+                    "confidence": 96.0,
+                    "bbox": [
+                        857,
+                        2734,
+                        30,
+                        19
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w71",
+                    "text": "claim.",
+                    "confidence": 96.0,
+                    "bbox": [
+                        898,
+                        2728,
+                        88,
+                        25
+                    ],
+                    "page": 1
+                }
+            ]
+        },
+        {
+            "page": 1,
+            "text": "No automatic claim approval or denial is permitted.",
+            "words": [
+                {
+                    "id": "p1-w73",
+                    "text": "No",
+                    "confidence": 96.0,
+                    "bbox": [
+                        171,
+                        2788,
+                        42,
+                        26
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w74",
+                    "text": "automatic",
+                    "confidence": 96.0,
+                    "bbox": [
+                        224,
+                        2788,
+                        148,
+                        26
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w75",
+                    "text": "claim",
+                    "confidence": 96.0,
+                    "bbox": [
+                        384,
+                        2788,
+                        78,
+                        26
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w76",
+                    "text": "approval",
+                    "confidence": 96.0,
+                    "bbox": [
+                        475,
+                        2788,
+                        128,
+                        33
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w77",
+                    "text": "or",
+                    "confidence": 96.0,
+                    "bbox": [
+                        617,
+                        2795,
+                        29,
+                        19
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w78",
+                    "text": "denial",
+                    "confidence": 96.0,
+                    "bbox": [
+                        658,
+                        2788,
+                        87,
+                        26
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w79",
+                    "text": "is",
+                    "confidence": 96.0,
+                    "bbox": [
+                        760,
+                        2788,
+                        22,
+                        26
+                    ],
+                    "page": 1
+                },
+                {
+                    "id": "p1-w80",
+                    "text": "permitted.",
+                    "confidence": 96.0,
+                    "bbox": [
+                        795,
+                        2788,
+                        149,
+                        33
+                    ],
+                    "page": 1
+                }
+            ]
+        }
+    ]
+}

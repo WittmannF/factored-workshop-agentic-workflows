@@ -1,4 +1,6 @@
+import shutil
 import uuid
+from pathlib import Path
 from typing import Any
 
 from langgraph.types import Command
@@ -14,7 +16,7 @@ from .graph import (
     initial_state,
 )
 from .llm import OPIK_PROJECT
-from .ocr import EXTRACT_SYSTEM, annotated_page
+from .ocr import EXTRACT_SYSTEM
 
 TRACE_NODES = (
     ('Tesseract OCR', 'ocr'),
@@ -102,13 +104,17 @@ def _public_field(field: dict | None) -> dict | None:
 
 
 def _page_path(thread_id: str, values: dict):
-    if not values.get('ocr') or not values['ocr'].get('images'):
+    images = (values.get('ocr') or {}).get('images') or []
+    if not images:
         return None
     path = ARTIFACTS / f'{thread_id}.png'
     if path.is_file():
         return path
+    source = Path(images[0]['path'])
+    if not source.is_file():
+        return None
     ARTIFACTS.mkdir(parents=True, exist_ok=True)
-    annotated_page(values).save(path)
+    shutil.copy(source, path)
     return path
 
 
