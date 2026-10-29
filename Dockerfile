@@ -19,6 +19,7 @@ RUN uv sync --frozen --no-dev --no-install-project
 COPY backend/ /app/backend/
 RUN uv sync --frozen --no-dev
 COPY --from=ui /src/frontend/dist /app/frontend/dist
+COPY samples/ /app/samples/
 ENV PORT=8000
 ENV OMP_THREAD_LIMIT=1
 EXPOSE 8000

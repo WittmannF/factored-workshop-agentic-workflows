@@ -1,7 +1,11 @@
+import copy
 import difflib
+import json
 import re
+import shutil
 import threading
 from datetime import date
+from pathlib import Path
 from typing import Any
 
 import pymupdf
@@ -55,6 +59,44 @@ def _recognize_pdf(pdf_path):
                     'words': entries,
                 })
     return {'images': images, 'words': words, 'lines': lines}
+
+
+def write_sample_ocr():
+    from .cases import CASES, OCR_DIR, PDF_DIR
+    OCR_DIR.mkdir(parents=True, exist_ok=True)
+    for case_id in CASES:
+        recognized = ocr_pdf(PDF_DIR / f'{case_id}.pdf')
+        image = recognized['images'][0]
+        shutil.copy(image['path'], OCR_DIR / f'{case_id}.png')
+        stored = {
+            'images': [{
+                'page': image['page'],
+                'path': f'{case_id}.png',
+                'width': image['width'],
+                'height': image['height'],
+            }],
+            'words': recognized['words'],
+            'lines': recognized['lines'],
+        }
+        (OCR_DIR / f'{case_id}.json').write_text(json.dumps(stored), encoding='utf-8')
+
+
+def load_sample_ocr(case_id: str, pdf_path: str) -> dict | None:
+    from .cases import CASES, OCR_DIR, PDF_DIR
+    if case_id not in CASES:
+        return None
+    sample = (PDF_DIR / f'{case_id}.pdf').resolve()
+    if Path(pdf_path).resolve() != sample:
+        return None
+    cache = OCR_DIR / f'{case_id}.json'
+    if not cache.is_file():
+        return None
+    payload = json.loads(cache.read_text(encoding='utf-8'))
+    payload['images'] = [
+        {**image, 'path': str((OCR_DIR / image['path']).resolve())}
+        for image in payload['images']
+    ]
+    return copy.deepcopy(payload)
 
 
 def _label_normalize(text):
@@ -160,8 +202,9 @@ def extract_claim(state):
 
 
 def ocr_node(state):
-    from pathlib import Path
-    return {'ocr': ocr_pdf(Path(state['pdf_path'])), 'trace': ['Tesseract OCR: ' + state['case_id']]}
+    cached = load_sample_ocr(state['case_id'], state['pdf_path'])
+    recognized = cached if cached is not None else ocr_pdf(Path(state['pdf_path']))
+    return {'ocr': recognized, 'trace': ['Tesseract OCR: ' + state['case_id']]}
 
 
 def confidence_gate(state):
@@ -186,10 +229,6 @@ def confidence_gate(state):
 
 def route_gate(state):
     return 'human_review' if state['fields_to_review'] else 'validate_claim'
-
-
-def annotated_page(state):
-    return Image.open(state['ocr']['images'][0]['path']).convert('RGB')
 
 
 def parse_brl(value: Any) -> float | None:
