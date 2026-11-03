@@ -57,22 +57,25 @@ def test_one_tesseract_at_a_time(monkeypatch, tmp_path):
             assert not thread.is_alive()
 
 
-def test_snapshot_writes_the_page_once(monkeypatch, tmp_path):
+def test_snapshot_copies_the_page_once(monkeypatch, tmp_path):
     from app import runs
 
-    saves = []
+    source = tmp_path / 'AUTO-101.png'
+    source.write_bytes(b'png-bytes')
+    artifacts = tmp_path / 'artifacts'
+    copies = []
+    real_copy = runs.shutil.copy
 
-    class Page:
-        def save(self, path):
-            saves.append(path)
-            Path(path).write_bytes(b'png')
+    def spy(src, dst, *args, **kwargs):
+        copies.append(Path(dst))
+        return real_copy(src, dst, *args, **kwargs)
 
-    monkeypatch.setattr(runs, 'ARTIFACTS', tmp_path)
-    monkeypatch.setattr(runs, 'annotated_page', lambda _values: Page())
+    monkeypatch.setattr(runs.shutil, 'copy', spy)
+    monkeypatch.setattr(runs, 'ARTIFACTS', artifacts)
     monkeypatch.setattr(runs.graph, 'get_state', lambda _config: SimpleNamespace(
         values={
             'trace': ['Tesseract OCR: AUTO-101'],
-            'ocr': {'images': [{'path': 'page.png', 'page': 1}], 'lines': []},
+            'ocr': {'images': [{'path': str(source), 'page': 1}], 'lines': []},
             'fields': {},
         },
         tasks=[],
@@ -84,4 +87,46 @@ def test_snapshot_writes_the_page_once(monkeypatch, tmp_path):
         runs.snapshot('thread-1')
     finally:
         runs.RUNS.pop('thread-1', None)
-    assert len(saves) == 1
+    assert copies == [artifacts / 'thread-1.png']
+    assert (artifacts / 'thread-1.png').read_bytes() == b'png-bytes'
+
+
+def test_sample_case_reads_cached_ocr(monkeypatch, tmp_path):
+    from app import cases, ocr
+
+    claims = tmp_path / 'claims'
+    cache = tmp_path / 'ocr'
+    claims.mkdir()
+    cache.mkdir()
+    sample = claims / 'AUTO-101.pdf'
+    _tiny_pdf(sample)
+    (cache / 'AUTO-101.json').write_text(
+        '{"images":[{"page":1,"path":"AUTO-101.png","width":10,"height":10}],"words":[],"lines":[]}',
+        encoding='utf-8',
+    )
+    (cache / 'AUTO-101.png').write_bytes(b'png')
+    monkeypatch.setattr(cases, 'PDF_DIR', claims)
+    monkeypatch.setattr(cases, 'OCR_DIR', cache)
+    calls = []
+    monkeypatch.setattr(ocr.pytesseract, 'image_to_data', lambda *_args, **_kwargs: calls.append(1))
+    result = ocr.ocr_node({'case_id': 'AUTO-101', 'pdf_path': str(sample)})
+    assert calls == []
+    assert result['ocr']['images'][0]['path'] == str((cache / 'AUTO-101.png').resolve())
+    assert result['trace'] == ['Tesseract OCR: AUTO-101']
+
+
+def test_other_pdf_still_runs_tesseract(monkeypatch, tmp_path):
+    from app import ocr
+
+    monkeypatch.setattr(ocr, 'ARTIFACTS', tmp_path)
+    pdf = tmp_path / 'upload.pdf'
+    _tiny_pdf(pdf)
+    calls = []
+
+    def blocked(_image, **_kwargs):
+        calls.append(1)
+        return EMPTY_OCR
+
+    monkeypatch.setattr(ocr.pytesseract, 'image_to_data', blocked)
+    ocr.ocr_node({'case_id': 'upload-1', 'pdf_path': str(pdf)})
+    assert calls == [1]

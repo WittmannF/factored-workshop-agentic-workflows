@@ -10,7 +10,7 @@ from .llm import openrouter_vision_structured
 
 RAW_BASE = (
     'https://raw.githubusercontent.com/WittmannF/'
-    'factored-workshop-agentic-workflows/main/mock_data/damage'
+    'factored-workshop-agentic-workflows/main/samples/damage'
 )
 DAMAGE_TYPES = ('front_structural', 'side_panel', 'rear_panel')
 DAMAGE_SIZES = ('localized', 'moderate', 'extensive')

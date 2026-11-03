@@ -7,7 +7,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from .cases import ARTIFACTS, CASES, create_claim_pdfs
+from .cases import ARTIFACTS, CASES
 from .config import ROOT, require_live_settings
 from .runs import page_file, resume_run, snapshot, start_run, step_run
 
@@ -17,7 +17,7 @@ DESK = ROOT / 'frontend' / 'dist'
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     require_live_settings()
-    create_claim_pdfs()
+    ARTIFACTS.mkdir(parents=True, exist_ok=True)
     yield
 
 
